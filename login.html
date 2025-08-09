@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kwabenamedia Login</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #e8f5e9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      text-align: center;
+      color: #2e7d32;
+    }
+    label {
+      margin-top: 10px;
+      display: block;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1b5e20;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .register-btn {
+      background-color: #388e3c;
+      margin-top: 10px;
+    }
+    .register-btn:hover {
+      background-color: #2c6b2f;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login to Kwabenamedia</h2>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input type="email" id="email" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" required />
+
+      <button type="submit">Login</button>
+      <button type="button" class="register-btn" onclick="window.location.href='register.html'">
+        Register
+      </button>
+      <div id="error" class="error"></div>
+    </form>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCGoDeUIKI_aWPV-Ys6Swlw9YQNcVhn5dY",
+      authDomain: "kwabenamedia.firebaseapp.com",
+      projectId: "kwabenamedia",
+      databaseURL: "https://kwabenamedia-default-rtdb.firebaseio.com",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const form = document.getElementById("loginForm");
+    const errorDiv = document.getElementById("error");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Admin Login
+          if (email === "admin@gmail.com") {
+            window.location.href = "admin_dashboard.html";
+          } else {
+            // Regular User
+            window.location.href = "index.html";
+          }
+        })
+        .catch((error) => {
+          errorDiv.textContent = "Login failed: " + error.message;
+        });
+    });
+  </script>
+</body>
+</html>

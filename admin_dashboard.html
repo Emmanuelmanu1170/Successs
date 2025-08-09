@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Kwabenamedia Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e8f5e9;
+      color: #2e7d32;
+      margin: 0;
+    }
+    header {
+      background: #2e7d32;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #66bb6a;
+      color: white;
+    }
+    button {
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+    .complete-btn { background: #43a047; }
+    .delete-btn { background: #e53935; }
+    .login-box {
+      max-width: 300px;
+      background: white;
+      padding: 20px;
+      margin: 100px auto;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Kwabenamedia Admin Dashboard</h1>
+</header>
+
+<div id="login-section" class="login-box">
+  <h3>Admin Login</h3>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="adminLogin()">Login</button>
+</div>
+
+<div id="dashboard" class="hidden">
+  <h2 style="text-align:center;">Orders</h2>
+  <table id="orders-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Service</th>
+        <th>Quantity</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyu3FYRfcwzzvZTMSUyI_lv2U-p8u1GV6wilrsjXx9KO8V6OYxANQ6qF8QIE9yYARsQ/exec";
+
+function adminLogin() {
+  const email = document.getElementById("email").value;
+  const pass = document.getElementById("password").value;
+
+  if (email === "admin@gmail.com" && pass === "Emmaemma11") {
+    document.getElementById("login-section").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    fetchOrders();
+  } else {
+    alert("Invalid admin credentials");
+  }
+}
+
+function fetchOrders() {
+  fetch(SCRIPT_URL + "?action=getOrders")
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector("#orders-table tbody");
+      tbody.innerHTML = "";
+      data.forEach((order, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${order.name}</td>
+          <td>${order.email}</td>
+          <td>${order.service}</td>
+          <td>${order.quantity}</td>
+          <td>${order.status}</td>
+          <td>
+            <button class="complete-btn" onclick="updateOrder(${index}, 'Completed')">Mark Complete</button>
+            <button class="delete-btn" onclick="deleteOrder(${index})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    });
+}
+
+function updateOrder(index, status) {
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "updateOrder", index, status })
+  })
+  .then(res => res.text())
+  .then(() => {
+    alert("Order updated");
+    fetchOrders();
+  });
+}
+
+function deleteOrder(index) {
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "deleteOrder", index })
+  })
+  .then(res => res.text())
+  .then(() => {
+    alert("Order deleted");
+    fetchOrders();
+  });
+}
+</script>
+
+</body>
+</html>

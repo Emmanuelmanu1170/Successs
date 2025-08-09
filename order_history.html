@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Order History - Kwabenamedia</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6fff4;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #006400;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #006400;
+      color: white;
+    }
+
+    .logout-btn {
+      background-color: #006400;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background-color: #004d00;
+    }
+  </style>
+</head>
+<body>
+  <h2>📋 Your Order History</h2>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
+  <table id="ordersTable">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Service</th>
+        <th>Quantity</th>
+        <th>Price (GHS)</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="ordersBody"></tbody>
+  </table>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCGoDeUIKI_aWPV-Ys6Swlw9YQNcVhn5dY",
+      authDomain: "kwabenamedia.firebaseapp.com",
+      databaseURL: "https://kwabenamedia-default-rtdb.firebaseio.com"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    const ordersBody = document.getElementById("ordersBody");
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const userId = user.uid;
+
+        db.ref("orders").orderByChild("userId").equalTo(userId).once("value", snapshot => {
+          if (!snapshot.exists()) {
+            ordersBody.innerHTML = `<tr><td colspan="5">No orders found.</td></tr>`;
+            return;
+          }
+
+          snapshot.forEach(child => {
+            const order = child.val();
+            const row = `
+              <tr>
+                <td>${order.platform}</td>
+                <td>${order.service}</td>
+                <td>${order.quantity}</td>
+                <td>${order.price}</td>
+                <td>${order.status}</td>
+              </tr>
+            `;
+            ordersBody.innerHTML += row;
+          });
+        });
+      } else {
+        window.location.href = "index.html"; // Redirect if not logged in
+      }
+    });
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      });
+    }
+  </script>
+</body>
+</html>

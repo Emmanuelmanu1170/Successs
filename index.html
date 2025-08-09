@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kwabenamedia - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #e9fdf2;
+      color: #222;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 80px auto;
+      padding: 40px 30px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    h2 {
+      color: #0f9d58;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 14px 30px;
+      margin: 12px 8px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #0f9d58;
+      color: white;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #0c7b43;
+    }
+
+    .tips {
+      margin-top: 30px;
+      font-style: italic;
+      font-size: 15px;
+      color: #444;
+      padding: 10px 15px;
+      background: #f0fdf4;
+      border-radius: 10px;
+      border-left: 4px solid #0f9d58;
+    }
+
+    .support {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .support a {
+      color: #0f9d58;
+      text-decoration: none;
+    }
+
+    .support a:hover {
+      text-decoration: underline;
+    }
+
+    .welcome {
+      font-weight: bold;
+      margin-top: 10px;
+      color: #333;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        margin: 30px 15px;
+        padding: 25px 20px;
+      }
+
+      button {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Welcome to Kwabenamedia 🎉</h2>
+    <div class="subtitle">Your #1 Social Media Boosting Partner</div>
+    
+    <div class="welcome" id="userEmail">Authenticating...</div>
+
+    <button onclick="placeOrder()">📦 Place Order</button>
+    <button onclick="logout()">🚪 Logout</button>
+
+    <div class="tips" id="tipBox">
+      Loading tip...
+    </div>
+
+    <div class="support">
+      <strong>Need help?</strong><br>
+      📧 <a href="mailto:kwabenaemma0554263293@gmail.com">kwabenaemma0554263293@gmail.com</a><br>
+      📱 <a href="https://wa.me/233554263293" target="_blank">WhatsApp: 0554263293</a>
+    </div>
+  </div>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCGoDeUIKI_aWPV-Ys6Swlw9YQNcVhn5dY",
+      authDomain: "kwabenamedia.firebaseapp.com",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Redirect if not logged in
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        document.getElementById("userEmail").innerText = `Logged in as: ${user.email}`;
+      }
+    });
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "login.html";
+      });
+    }
+
+    function placeOrder() {
+      window.location.href = "order.html";
+    }
+
+    // Rotating educational/funny tips
+    const tips = [
+      "💡 Tip: Always test before you post! Double-check links and content before placing orders.",
+      "😂 Funny: You can't spell algorithm without 'rithm' — so always code with rhythm!",
+      "📊 Stat: Over 85% of users trust a brand more when it has more followers. Time to boost!",
+      "🤖 Fun Fact: AI-generated content now powers more than 60% of online posts.",
+      "💬 Reminder: Your Kwabenamedia dashboard is live 24/7. Orders never sleep!",
+      "💡 Tip: Use trending hashtags to maximize your social boost results.",
+      "😂 Joke: Why did the marketer get kicked off the trampoline? Too many bounces!",
+      "📈 Insight: Videos have 1200% more shares than text and images combined. Boost your views!"
+    ];
+
+    function showRandomTip() {
+      const tip = tips[Math.floor(Math.random() * tips.length)];
+      document.getElementById("tipBox").textContent = tip;
+    }
+
+    // Rotate every 10 seconds
+    showRandomTip();
+    setInterval(showRandomTip, 10000);
+  </script>
+
+</body>
+</html>
