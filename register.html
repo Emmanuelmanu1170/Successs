@@ -37,6 +37,7 @@
       margin-top: 15px;
       border-radius: 5px;
       font-size: 16px;
+      cursor: pointer;
     }
     button:hover {
       background: darkgreen;
@@ -47,6 +48,13 @@
     }
     .contact-btn:hover {
       background: #128C7E;
+    }
+    .loading {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: gray;
+      display: none;
     }
   </style>
 </head>
@@ -60,22 +68,61 @@
   
   <button onclick="registerUser()">Register</button>
   <button class="contact-btn" onclick="contactAdmin()">Contact Admin</button>
+
+  <div id="loading" class="loading">Processing... Please wait</div>
 </div>
 
 <script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbyu3FYRfcwzzvZTMSUyI_lv2U-p8u1GV6wilrsjXx9KO8V6OYxANQ6qF8QIE9yYARsQ/exec";
+
 function registerUser() {
   const username = document.getElementById("username").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
+  const loadingText = document.getElementById("loading");
 
   if (!username || !email || !password) {
     alert("Please fill all fields.");
     return;
   }
 
-  // Simulating saving registration (replace with real backend request)
-  alert("Registration successful!");
-  window.location.href = "login.html";
+  loadingText.style.display = "block";
+
+  // Step 1: Check if email already exists
+  fetch(`${scriptURL}?action=checkEmail&email=${encodeURIComponent(email)}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.exists) {
+        loadingText.style.display = "none";
+        alert("This email is already registered. Please log in.");
+      } else {
+        // Step 2: Register user
+        fetch(scriptURL, {
+          method: "POST",
+          body: new URLSearchParams({
+            action: "register",
+            username: username,
+            email: email,
+            password: password
+          })
+        })
+        .then(() => {
+          setTimeout(() => {
+            loadingText.style.display = "none";
+            alert("Registration successful!");
+            window.location.href = "login.html";
+          }, 4000);
+        })
+        .catch(() => {
+          loadingText.style.display = "none";
+          alert("An error occurred. Please try again.");
+        });
+      }
+    })
+    .catch(() => {
+      loadingText.style.display = "none";
+      alert("Unable to connect to server.");
+    });
 }
 
 function contactAdmin() {
