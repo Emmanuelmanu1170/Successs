@@ -78,6 +78,7 @@
     <option value="Facebook">Facebook</option>
     <option value="WhatsApp">WhatsApp</option>
     <option value="LinkedIn">LinkedIn</option>
+    <option value="Twitter">Twitter</option>
   </select>
 
   <label>Service</label>
@@ -108,6 +109,8 @@
 
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
+const exchangeRate = 15; // 1 USD = 15 GHS
+
 const prices = {
   TikTok: {
     Followers: [35, 3],
@@ -153,6 +156,14 @@ const prices = {
   },
   LinkedIn: {
     "AI Growth": [340, 35]
+  },
+  Twitter: {
+    "Followers stable": [45, (45 / exchangeRate).toFixed(2)],
+    "Followers no refill": [30, (30 / exchangeRate).toFixed(2)],
+    "Tweet views": [12, (12 / exchangeRate).toFixed(2)],
+    "Video views": [12, (12 / exchangeRate).toFixed(2)],
+    "Retweet": [20, (20 / exchangeRate).toFixed(2)],
+    "Impression": [15, (15 / exchangeRate).toFixed(2)]
   }
 };
 
@@ -183,7 +194,7 @@ function updatePrice() {
   if (platform && service && qty > 0) {
     const [ghs, usd] = prices[platform][service];
     priceGHS.textContent = ghs * qty;
-    priceUSD.textContent = usd * qty;
+    priceUSD.textContent = (ghs * qty / exchangeRate).toFixed(2);
   } else {
     priceGHS.textContent = 0;
     priceUSD.textContent = 0;
