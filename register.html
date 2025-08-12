@@ -1,134 +1,284 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Register</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register - Kwabenamedia</title>
+
+  <!-- Firebase compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore-compat.js"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-    }
-    .container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 400px;
-      margin: auto;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      color: green;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background: green;
-      color: white;
-      padding: 12px;
-      width: 100%;
-      border: none;
-      margin-top: 15px;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: darkgreen;
-    }
-    .contact-btn {
-      background: #25D366;
-      margin-top: 10px;
-    }
-    .contact-btn:hover {
-      background: #128C7E;
-    }
-    .loading {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 14px;
-      color: gray;
-      display: none;
-    }
+    :root{--green:#0f9d58;--dark:#074d2f}
+    body{font-family:Segoe UI,Arial,sans-serif;background:#eafaf1;margin:0;padding:20px;display:flex;align-items:center;justify-content:center;min-height:100vh}
+    .card{width:100%;max-width:420px;background:#fff;padding:26px;border-radius:12px;box-shadow:0 6px 24px rgba(6,90,60,0.06)}
+    h2{color:var(--green);text-align:center;margin:0 0 14px}
+    label{display:block;margin-top:12px;color:#333;font-weight:600}
+    input{width:100%;padding:10px;margin-top:6px;border:1px solid #dcdcdc;border-radius:8px;box-sizing:border-box}
+    button{width:100%;padding:12px;margin-top:18px;border-radius:8px;border:none;background:var(--green);color:#fff;font-weight:700;cursor:pointer}
+    button.secondary{background:#fff;color:var(--green);border:2px solid var(--green)}
+    .small{font-size:13px;color:#666;text-align:center;margin-top:12px}
+    .links{display:flex;gap:8px;justify-content:center;margin-top:10px}
+    /* Contact modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:60}
+    .modal{width:100%;max-width:560px;background:#fff;padding:18px;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,0.2)}
+    .modal h3{margin:0 0 8px;color:var(--dark)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .contact-card{background:#f7fff7;padding:10px;border-radius:8px;border:1px solid #e6ffe6;text-align:center}
+    .contact-card a{display:inline-block;margin-top:8px;color:var(--green);text-decoration:none;font-weight:600}
+    .close-btn{background:#eee;border:none;padding:6px 10px;border-radius:8px;cursor:pointer}
+    .msg{margin-top:8px;font-weight:600}
+    .form-row{margin-top:8px}
+    .note{font-size:13px;color:#666;margin-top:6px}
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h2>Register</h2>
-  <input type="text" id="username" placeholder="Username" required>
-  <input type="email" id="email" placeholder="Email" required>
-  <input type="password" id="password" placeholder="Password" required>
-  
-  <button onclick="registerUser()">Register</button>
-  <button class="contact-btn" onclick="contactAdmin()">Contact Admin</button>
+  <div class="card" role="main" aria-labelledby="title">
+    <h2 id="title">📝 Register — Kwabenamedia</h2>
 
-  <div id="loading" class="loading">Processing... Please wait</div>
-</div>
+    <form id="registrationForm" autocomplete="on">
+      <label for="fullname">Full name</label>
+      <input id="fullname" name="fullname" required placeholder="Kwabena Emma" />
 
-<script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbyu3FYRfcwzzvZTMSUyI_lv2U-p8u1GV6wilrsjXx9KO8V6OYxANQ6qF8QIE9yYARsQ/exec";
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required placeholder="you@example.com" />
 
-function registerUser() {
-  const username = document.getElementById("username").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const loadingText = document.getElementById("loading");
+      <label for="phone">Phone</label>
+      <input id="phone" name="phone" type="tel" required placeholder="+233 55 426 3293" />
 
-  if (!username || !email || !password) {
-    alert("Please fill all fields.");
-    return;
-  }
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required placeholder="Choose a secure password" />
 
-  loadingText.style.display = "block";
+      <button type="submit" id="registerBtn">Register</button>
+    </form>
 
-  // Step 1: Check if email already exists
-  fetch(`${scriptURL}?action=checkEmail&email=${encodeURIComponent(email)}`)
-    .then(response => response.json())
-    .then(data => {
-      if (data.exists) {
-        loadingText.style.display = "none";
-        alert("This email is already registered. Please log in.");
-      } else {
-        // Step 2: Register user
-        fetch(scriptURL, {
-          method: "POST",
-          body: new URLSearchParams({
-            action: "register",
-            username: username,
-            email: email,
-            password: password
-          })
-        })
-        .then(() => {
-          setTimeout(() => {
-            loadingText.style.display = "none";
-            alert("Registration successful!");
-            window.location.href = "login.html";
-          }, 4000);
-        })
-        .catch(() => {
-          loadingText.style.display = "none";
-          alert("An error occurred. Please try again.");
-        });
+    <div class="links">
+      <button id="contactAdminBtn" class="secondary" type="button">📞 Contact Admin</button>
+      <button id="goLoginBtn" class="secondary" type="button">🔐 Go to Login</button>
+    </div>
+
+    <p class="small">Already have an account? <a href="login.html">Login here</a></p>
+  </div>
+
+  <!-- CONTACT MODAL -->
+  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 id="contactTitle">Contact Admin</h3>
+        <button class="close-btn" id="closeModalBtn" aria-label="Close contact dialog">Close ✕</button>
+      </div>
+
+      <p class="note">Choose a quick option or send a message directly — admin will receive it in the AppScript/Sheet.</p>
+
+      <div class="contact-grid" style="margin-top:12px">
+        <div class="contact-card">
+          <div style="font-weight:700">Email</div>
+          <div style="margin-top:6px;color:#333">kwabenaemma0554263293@gmail.com</div>
+          <a href="mailto:kwabenaemma0554263293@gmail.com?subject=Kwabenamedia%20Support" target="_blank">Send email</a>
+        </div>
+
+        <div class="contact-card">
+          <div style="font-weight:700">WhatsApp</div>
+          <div style="margin-top:6px;color:#333">+233 55 426 3293</div>
+          <a href="https://wa.me/233554263293" target="_blank">Open WhatsApp</a>
+        </div>
+      </div>
+
+      <hr style="margin:14px 0;border:none;border-top:1px solid #eee">
+
+      <h4 style="margin:0 0 8px">Quick message</h4>
+      <div style="display:flex;gap:8px;flex-direction:column">
+        <input id="contactName" placeholder="Your name (optional)" />
+        <input id="contactEmail" placeholder="Your email" />
+        <textarea id="contactMessage" rows="4" placeholder="Your message..." style="padding:8px;border-radius:8px;border:1px solid #ddd"></textarea>
+        <div style="display:flex;gap:8px">
+          <button id="sendContactBtn" style="flex:1;background:var(--green);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer">Send message</button>
+          <button id="clearContactBtn" style="flex:1;background:#eee;border:none;padding:10px;border-radius:8px;cursor:pointer">Clear</button>
+        </div>
+        <div id="contactStatus" class="msg" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*******************************
+     * CONFIG - update if needed
+     *******************************/
+    // Your Apps Script endpoint (you provided earlier)
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyu3FYRfcwzzvZTMSUyI_lv2U-p8u1GV6wilrsjXx9KO8V6OYxANQ6qF8QIE9yYARsQ/exec";
+
+    // Firebase config (we use your apiKey + project; remaining fields placeholders)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCGoDeUIKI_aWPV-Ys6Swlw9YQNcVhn5dY",
+      authDomain: "kwabenamedia.firebaseapp.com",
+      projectId: "kwabenamedia",
+      storageBucket: "kwabenamedia.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    /*******************************
+     * Init Firebase
+     *******************************/
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    /*******************************
+     * Registration logic
+     *******************************/
+    const registrationForm = document.getElementById('registrationForm');
+    const registerBtn = document.getElementById('registerBtn');
+
+    registrationForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      registerBtn.disabled = true;
+      registerBtn.textContent = 'Registering...';
+
+      const fullname = document.getElementById('fullname').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!fullname || !email || !phone || !password) {
+        alert('Please fill all fields');
+        registerBtn.disabled = false;
+        registerBtn.textContent = 'Register';
+        return;
       }
-    })
-    .catch(() => {
-      loadingText.style.display = "none";
-      alert("Unable to connect to server.");
+
+      try {
+        // create user
+        const userCred = await auth.createUserWithEmailAndPassword(email, password);
+        const uid = userCred.user.uid;
+
+        // save user profile
+        await db.collection('users').doc(uid).set({
+          fullname,
+          email,
+          phone,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // optional: send verification
+        try { await userCred.user.sendEmailVerification(); } catch (err) { /* ignore */ }
+
+        // Wait 5 seconds before showing success message and redirecting
+        setTimeout(() => {
+          alert('✅ Registration successful! Please check your email for verification (if available). Redirecting to login...');
+          window.location.href = 'login.html';
+        }, 5000);
+
+      } catch (err) {
+        console.error(err);
+        let msg = err.message || 'Registration failed';
+        if (msg.includes('email-already-in-use')) msg = 'This email is already registered — try logging in.';
+        alert('Error: ' + msg);
+        registerBtn.disabled = false;
+        registerBtn.textContent = 'Register';
+      }
     });
-}
 
-function contactAdmin() {
-  window.location.href = "https://wa.me/233554263293";
-}
-</script>
+    /*******************************
+     * Contact admin modal & form
+     *******************************/
+    const contactAdminBtn = document.getElementById('contactAdminBtn');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const contactEmailInput = document.getElementById('contactEmail');
+    const contactNameInput = document.getElementById('contactName');
+    const contactMsgInput = document.getElementById('contactMessage');
+    const sendContactBtn = document.getElementById('sendContactBtn');
+    const clearContactBtn = document.getElementById('clearContactBtn');
+    const contactStatus = document.getElementById('contactStatus');
+    const regEmailInput = document.getElementById('email');
 
+    // open modal
+    contactAdminBtn.addEventListener('click', () => {
+      // prefill contact email from registration input if present
+      const regEmail = regEmailInput.value.trim();
+      if (regEmail) contactEmailInput.value = regEmail;
+      contactStatus.textContent = '';
+      modalBackdrop.style.display = 'flex';
+      modalBackdrop.setAttribute('aria-hidden', 'false');
+      contactMsgInput.focus();
+    });
+
+    // close modal
+    closeModalBtn.addEventListener('click', () => {
+      modalBackdrop.style.display = 'none';
+      modalBackdrop.setAttribute('aria-hidden', 'true');
+    });
+
+    // clear contact form
+    clearContactBtn.addEventListener('click', () => {
+      contactNameInput.value = '';
+      contactEmailInput.value = '';
+      contactMsgInput.value = '';
+      contactStatus.textContent = '';
+    });
+
+    // send contact message to Apps Script endpoint
+    sendContactBtn.addEventListener('click', async () => {
+      const name = contactNameInput.value.trim() || 'Anonymous';
+      const email = contactEmailInput.value.trim();
+      const message = contactMsgInput.value.trim();
+
+      if (!email || !message) {
+        contactStatus.style.color = 'crimson';
+        contactStatus.textContent = 'Please include your email and a message.';
+        return;
+      }
+
+      sendContactBtn.disabled = true;
+      sendContactBtn.textContent = 'Sending...';
+      contactStatus.style.color = '#333';
+      contactStatus.textContent = 'Sending message — please wait...';
+
+      try {
+        const fd = new FormData();
+        fd.append('type', 'contact');
+        fd.append('name', name);
+        fd.append('email', email);
+        fd.append('message', message);
+        fd.append('page', 'register');
+
+        const resp = await fetch(scriptURL, {
+          method: 'POST',
+          body: fd
+        });
+
+        if (!resp.ok) throw new Error('Network response was not OK');
+
+        contactStatus.style.color = 'green';
+        contactStatus.textContent = 'Message sent — admin will reply soon!';
+        setTimeout(() => {
+          modalBackdrop.style.display = 'none';
+        }, 1200);
+      } catch (err) {
+        console.error('Send contact error:', err);
+        contactStatus.style.color = 'crimson';
+        contactStatus.textContent = 'Failed to send — please try mailto or WhatsApp.';
+      } finally {
+        sendContactBtn.disabled = false;
+        sendContactBtn.textContent = 'Send message';
+      }
+    });
+
+    // small accessibility: close modal on backdrop click
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) {
+        modalBackdrop.style.display = 'none';
+      }
+    });
+
+    // "Go to Login" link
+    document.getElementById('goLoginBtn').addEventListener('click', () => {
+      window.location.href = 'login.html';
+    });
+  </script>
 </body>
 </html>
