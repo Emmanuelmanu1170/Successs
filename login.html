@@ -66,6 +66,13 @@
     .register-btn:hover {
       background-color: #2c6b2f;
     }
+    .forgot-btn {
+      background-color: #81c784;
+      margin-top: 10px;
+    }
+    .forgot-btn:hover {
+      background-color: #66bb6a;
+    }
   </style>
 </head>
 <body>
@@ -79,6 +86,8 @@
       <input type="password" id="password" required />
 
       <button type="submit">Login</button>
+      <!-- Forgot Password button -->
+      <button type="button" class="forgot-btn" onclick="window.open('https://wa.me/233554263293', '_blank')">Forgot Password?</button>
       <button type="button" class="register-btn" onclick="window.location.href='register.html'">
         Register
       </button>
