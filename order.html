@@ -114,6 +114,8 @@ const exchangeRate = 15; // 1 USD = 15 GHS
 const prices = {
   TikTok: {
     Followers: [35, 3],
+    "Followers Ghanaians only": [45, (45 / exchangeRate).toFixed(2)],
+    "Followers Nigerians only": [45, (45 / exchangeRate).toFixed(2)],
     Likes: [12, 1],
     Views: [12, 1],
     Share: [12, 2],
@@ -192,7 +194,7 @@ function updatePrice() {
   const service = serviceSelect.value;
   const qty = parseInt(quantityInput.value);
   if (platform && service && qty > 0) {
-    const [ghs, usd] = prices[platform][service];
+    const [ghs] = prices[platform][service];
     priceGHS.textContent = ghs * qty;
     priceUSD.textContent = (ghs * qty / exchangeRate).toFixed(2);
   } else {
