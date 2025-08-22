@@ -5,66 +5,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0f7e9, #f4f4f4);
       padding: 20px;
+      min-height: 100vh;
     }
     .container {
       background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 500px;
+      padding: 25px;
+      border-radius: 15px;
+      max-width: 550px;
       margin: auto;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      animation: fadeIn 1s ease-in-out;
     }
     h2 {
       text-align: center;
-      color: green;
+      color: #006400;
+      font-size: 26px;
+      margin-bottom: 15px;
     }
     label {
       display: block;
-      margin-top: 10px;
+      margin-top: 12px;
       font-weight: bold;
+      color: #333;
     }
     select, input {
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
       border: 1px solid #ccc;
+      transition: 0.3s;
+      font-size: 15px;
+    }
+    select:focus, input:focus {
+      border-color: #28a745;
+      box-shadow: 0 0 8px rgba(40, 167, 69, 0.4);
+      outline: none;
     }
     button {
-      background: green;
+      background: linear-gradient(90deg, #28a745, #218838);
       color: white;
-      padding: 12px;
+      padding: 14px;
       width: 100%;
       border: none;
-      margin-top: 15px;
-      border-radius: 5px;
-      font-size: 16px;
+      margin-top: 18px;
+      border-radius: 8px;
+      font-size: 17px;
       cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
     }
     button:hover {
-      background: darkgreen;
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #218838, #1e7e34);
     }
     .history-btn {
-      background: #555;
-      margin-top: 10px;
+      background: linear-gradient(90deg, #444, #222);
+      margin-top: 12px;
     }
     .history-btn:hover {
-      background: #333;
+      background: linear-gradient(90deg, #000, #111);
     }
     .price-box {
-      margin-top: 10px;
+      margin-top: 15px;
       background: #f9f9f9;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+      color: #222;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .alt-box {
+      margin-top: 25px;
+      background: #f1fff1;
+      border-left: 6px solid #28a745;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #444;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
     }
   </style>
 </head>
 <body>
-
 <div class="container">
   <h2>Place Your Order</h2>
 
@@ -109,64 +140,16 @@
 
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
-const exchangeRate = 15; // 1 USD = 15 GHS
-
+const exchangeRate = 15;
 const prices = {
-  TikTok: {
-    Followers: [35, 3],
-    "Followers Ghanaians only": [45, (45 / exchangeRate).toFixed(2)],
-    "Followers Nigerians only": [45, (45 / exchangeRate).toFixed(2)],
-    Likes: [12, 1],
-    Views: [12, 1],
-    Share: [12, 2],
-    "Live stream": [20, 2],
-    "Live like": [15, 5],
-    Comment: [12, 2]
-  },
-  Instagram: {
-    Followers: [27, 2],
-    Likes: [16, 1],
-    Views: [16, 1],
-    "Story views": [12, 0],
-    Comments: [15, 0],
-    "Channel members": [20, 0]
-  },
-  YouTube: {
-    Views: [15, 2],
-    Likes: [13, 2.5],
-    Subscribers: [25, 3],
-    "Live stream views": [20, 0],
-    Comment: [30, 0],
-    "Live streaming like": [17, 0],
-    "Short views": [20, 0],
-    "Short likes": [20, 0]
-  },
-  Telegram: {
-    Members: [40, 4],
-    Reactions: [24, 2],
-    Views: [40, 4]
-  },
-  Facebook: {
-    Followers: [25, 3],
-    Likes: [20, 3],
-    Views: [15, 2],
-    "Live streaming": [20, 0],
-    Reaction: [15, 0]
-  },
-  WhatsApp: {
-    "Channel Members": [95, 10]
-  },
-  LinkedIn: {
-    "AI Growth": [340, 35]
-  },
-  Twitter: {
-    "Followers stable": [45, (45 / exchangeRate).toFixed(2)],
-    "Followers no refill": [30, (30 / exchangeRate).toFixed(2)],
-    "Tweet views": [12, (12 / exchangeRate).toFixed(2)],
-    "Video views": [12, (12 / exchangeRate).toFixed(2)],
-    "Retweet": [20, (20 / exchangeRate).toFixed(2)],
-    "Impression": [15, (15 / exchangeRate).toFixed(2)]
-  }
+  TikTok: { Followers:[35,3], "Followers Ghanaians only":[45,(45/exchangeRate).toFixed(2)], "Followers Nigerians only":[45,(45/exchangeRate).toFixed(2)], Likes:[12,1], Views:[12,1], Share:[12,2], "Live stream":[20,2], "Live like":[15,5], Comment:[12,2] },
+  Instagram: { Followers:[27,2], Likes:[16,1], Views:[16,1], "Story views":[12,0], Comments:[15,0], "Channel members":[20,0] },
+  YouTube: { Views:[15,2], Likes:[13,2.5], Subscribers:[25,3], "Live stream views":[20,0], Comment:[30,0], "Live streaming like":[17,0], "Short views":[20,0], "Short likes":[20,0] },
+  Telegram: { Members:[40,4], Reactions:[24,2], Views:[40,4] },
+  Facebook: { Followers:[25,3], Likes:[20,3], Views:[15,2], "Live streaming":[20,0], Reaction:[15,0] },
+  WhatsApp: { "Channel Members":[95,10] },
+  LinkedIn: { "AI Growth":[340,35] },
+  Twitter: { "Followers stable":[45,(45/exchangeRate).toFixed(2)], "Followers no refill":[30,(30/exchangeRate).toFixed(2)], "Tweet views":[12,(12/exchangeRate).toFixed(2)], "Video views":[12,(12/exchangeRate).toFixed(2)], "Retweet":[20,(20/exchangeRate).toFixed(2)], "Impression":[15,(15/exchangeRate).toFixed(2)] }
 };
 
 const platformSelect = document.getElementById('platform');
@@ -178,60 +161,55 @@ const priceUSD = document.getElementById('priceUSD');
 platformSelect.addEventListener('change', function() {
   serviceSelect.innerHTML = '<option value="">-- Select Service --</option>';
   const services = prices[this.value];
-  if (services) {
-    Object.keys(services).forEach(service => {
-      const opt = document.createElement('option');
-      opt.value = service;
-      opt.textContent = service;
+  if(services){
+    Object.keys(services).forEach(service=>{
+      const opt=document.createElement('option');
+      opt.value=service;
+      opt.textContent=service;
       serviceSelect.appendChild(opt);
     });
   }
   updatePrice();
 });
 
-function updatePrice() {
+serviceSelect.addEventListener('change', updatePrice);
+quantityInput.addEventListener('input', updatePrice);
+
+function updatePrice(){
   const platform = platformSelect.value;
   const service = serviceSelect.value;
   const qty = parseInt(quantityInput.value);
-  if (platform && service && qty > 0) {
+  if(platform && service && qty>0){
     const [ghs] = prices[platform][service];
-    priceGHS.textContent = ghs * qty;
-    priceUSD.textContent = (ghs * qty / exchangeRate).toFixed(2);
+    priceGHS.textContent = ghs*qty;
+    priceUSD.textContent = (ghs*qty/exchangeRate).toFixed(2);
   } else {
     priceGHS.textContent = 0;
     priceUSD.textContent = 0;
   }
 }
 
-serviceSelect.addEventListener('change', updatePrice);
-quantityInput.addEventListener('input', updatePrice);
-
-function payWithPaystack() {
+function payWithPaystack(){
   const email = document.getElementById('email').value;
-  const amount = parseFloat(priceGHS.textContent) * 100; // in pesewas
+  const amount = parseFloat(priceGHS.textContent)*100;
 
-  if (!email || amount <= 0) {
+  if(!email || amount<=0){
     alert("Please complete all fields and select a service.");
     return;
   }
 
   let handler = PaystackPop.setup({
-    key: 'pk_live_ddbf47d168d6849ef29050ffc35c98a12e11e38b',
-    email: email,
-    amount: amount,
-    currency: 'GHS',
-    callback: function(response) {
-      saveOrder(response.reference);
-    },
-    onClose: function() {
-      alert('Transaction was not completed.');
-    }
+    key:'pk_live_ddbf47d168d6849ef29050ffc35c98a12e11e38b',
+    email:email,
+    amount:amount,
+    currency:'GHS',
+    callback:function(response){ saveOrder(response.reference); },
+    onClose:function(){ alert('Transaction was not completed.'); }
   });
   handler.openIframe();
 }
 
-function saveOrder(reference) {
-  const scriptURL = "https://script.google.com/macros/s/AKfycbyu3FYRfcwzzvZTMSUyI_lv2U-p8u1GV6wilrsjXx9KO8V6OYxANQ6qF8QIE9yYARsQ/exec";
+function saveOrder(reference){
   const data = {
     platform: platformSelect.value,
     service: serviceSelect.value,
@@ -241,21 +219,31 @@ function saveOrder(reference) {
     username: document.getElementById('username').value,
     email: document.getElementById('email').value,
     phone: document.getElementById('phone').value,
-    reference: reference
+    reference: reference,
+    date: new Date().toLocaleString(),
+    status: "Pending"
   };
 
-  fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) })
-    .then(res => alert("Order placed successfully!"))
-    .catch(err => alert("Error saving order."));
+  // Save to localStorage for admin dashboard
+  let orders = JSON.parse(localStorage.getItem('userOrders')) || [];
+  orders.push(data);
+  localStorage.setItem('userOrders', JSON.stringify(orders));
+
+  alert("Order placed successfully!");
+  localStorage.setItem('latestOrder', JSON.stringify(data));
+  window.location.href = "customer_dashboard.html";
+  window.open("admin.html","_blank");
 }
 </script>
 
-<h2>Alternatively</h2>
-<h3>Alternative for payment issues 
-[Fedelity: Account number: 2100377015716
-] Fedelity: Account name: Emmanuel Manu
-[] Fedelity: Sort code: 240121
-Fedelity: Branch Sort code: 021
-Fedelity: Swift code: FBLIGHAC</h3>
+<div class="alt-box">
+  <h2>Alternatively</h2>
+  <h3>Alternative for payment issues<br>
+  Fedelity: Account number: <strong>2100377015716</strong><br>
+  Fedelity: Account name: <strong>Emmanuel Manu</strong><br>
+  Fedelity: Sort code: <strong>240121</strong><br>
+  Fedelity: Branch Sort code: <strong>021</strong><br>
+  Fedelity: Swift code: <strong>FBLIGHAC</strong></h3>
+</div>
 </body>
 </html>
