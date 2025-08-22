@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Kwabenamedia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .top-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .logout {
+      background-color: #ff4d4d;
+    }
+
+    .export {
+      background-color: #28a745;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #1e90ff;
+      color: white;
+    }
+
+    .action-btn {
+      margin-right: 10px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 3px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .update-btn {
+      background-color: #ffc107;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+    }
+
+    a.link {
+      color: #1e90ff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>👨‍💼 Admin Dashboard</h2>
+
+  <div class="top-buttons">
+    <button class="export" onclick="exportCSV()">⬇ Export Orders to CSV</button>
+    <button class="logout" onclick="logout()">🚪 Logout</button>
+  </div>
+
+  <table id="orderTable">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>User Email</th>
+        <th>Username/Link</th>
+        <th>Service</th>
+        <th>Quantity</th>
+        <th>Price (GHS)</th>
+        <th>Price (USD)</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="orderBody"></tbody>
+  </table>
+
+  <script>
+    // Ensure only admin can access
+    if (localStorage.getItem("loggedIn") !== "true" || localStorage.getItem("userType") !== "admin") {
+      alert("Access denied. Admins only.");
+      window.location.href = "login.html";
+    }
+
+    // Load all user orders from localStorage
+    let orders = JSON.parse(localStorage.getItem("userOrders")) || [];
+    const orderBody = document.getElementById("orderBody");
+
+    function renderOrders() {
+      orderBody.innerHTML = "";
+
+      if (orders.length === 0) {
+        orderBody.innerHTML = `<tr><td colspan="10" style="text-align:center;">No orders found.</td></tr>`;
+        return;
+      }
+
+      orders.forEach((order, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${order.id}</td>
+          <td>${order.email || "N/A"}</td>
+          <td><a href="${order.username || '#'}" target="_blank" class="link">${order.username || "N/A"}</a></td>
+          <td>${order.service}</td>
+          <td>${order.quantity}</td>
+          <td>${order.priceGHS}</td>
+          <td>${order.priceUSD}</td>
+          <td>${order.date}</td>
+          <td>${order.status}</td>
+          <td>
+            <button class="action-btn update-btn" onclick="updateStatus(${index})">Update</button>
+            <button class="action-btn delete-btn" onclick="deleteOrder(${index})">Delete</button>
+          </td>
+        `;
+        orderBody.appendChild(row);
+      });
+    }
+
+    function updateStatus(index) {
+      const newStatus = prompt("Enter new status (Pending, Completed, Cancelled):", orders[index].status);
+      if (newStatus && newStatus.trim() !== "") {
+        orders[index].status = newStatus;
+        localStorage.setItem("userOrders", JSON.stringify(orders));
+        renderOrders();
+      }
+    }
+
+    function deleteOrder(index) {
+      if (confirm("Are you sure you want to delete this order?")) {
+        orders.splice(index, 1);
+        localStorage.setItem("userOrders", JSON.stringify(orders));
+        renderOrders();
+      }
+    }
+
+    function exportCSV() {
+      if (orders.length === 0) {
+        alert("No orders to export.");
+        return;
+      }
+
+      let csv = "Order ID,User Email,Username/Link,Service,Quantity,Price (GHS),Price (USD),Date,Status\n";
+      orders.forEach(order => {
+        csv += `${order.id},${order.email || "N/A"},${order.username || "N/A"},${order.service},${order.quantity},${order.priceGHS},${order.priceUSD},${order.date},${order.status}\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "kwabenamedia_orders.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    // Initial render
+    renderOrders();
+  </script>
+
+</body>
+</html>
