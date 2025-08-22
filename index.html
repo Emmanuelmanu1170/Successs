@@ -2,180 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Kwabenamedia - Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
-
+  <title>Kwabenamedia - Grow Your Social Media</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      padding: 0;
-      background: #e9fdf2;
-      color: #222;
+      font-family: 'Poppins', sans-serif;
+      background: #f9f9f9;
+      color: #333;
     }
-
-    .container {
-      max-width: 600px;
-      margin: 80px auto;
-      padding: 40px 30px;
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    header {
+      background: #0a7d32;
+      color: #fff;
+      padding: 15px 20px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
-
-    h2 {
-      color: #0f9d58;
-      margin-bottom: 5px;
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #ffdd00, #ffffff, #c8ffdd, #00eaff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      animation: floatText 4s ease-in-out infinite;
     }
-
-    .subtitle {
-      font-size: 15px;
-      color: #666;
-      margin-bottom: 20px;
+    nav {
+      margin-top: 10px;
     }
-
-    button {
-      padding: 14px 30px;
-      margin: 12px 8px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background-color: #0f9d58;
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+    .hero {
+      background: url("https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg") no-repeat center center/cover;
       color: white;
+      text-align: center;
+      padding: 80px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero h2 {
+      font-size: 38px;
+      margin-bottom: 10px;
+      animation: fadeIn 2s ease-in-out;
+    }
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 20px;
+      animation: fadeInUp 2s ease-in-out;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      margin: 8px;
+      background: #0a7d32;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
       transition: 0.3s;
     }
-
-    button:hover {
-      background-color: #0c7b43;
+    .btn:hover {
+      background: #055d22;
     }
-
-    .tips {
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 15px;
+    }
+    .card-content h3 {
+      margin-top: 0;
+      color: #0a7d32;
+    }
+    footer {
+      background: #0a7d32;
+      color: white;
+      text-align: center;
+      padding: 15px;
       margin-top: 30px;
-      font-style: italic;
-      font-size: 15px;
-      color: #444;
-      padding: 10px 15px;
-      background: #f0fdf4;
-      border-radius: 10px;
-      border-left: 4px solid #0f9d58;
+      position: relative;
+      overflow: hidden;
     }
 
-    .support {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #333;
+    /* Floating stickers (emojis) */
+    .floating-emoji {
+      position: absolute;
+      font-size: 24px;
+      animation: float 6s linear infinite;
+      opacity: 0.8;
+    }
+    .emoji1 { top: 10%; left: 5%; animation-delay: 0s; }
+    .emoji2 { top: 40%; left: 90%; animation-delay: 2s; }
+    .emoji3 { top: 70%; left: 10%; animation-delay: 4s; }
+    .emoji4 { top: 20%; left: 50%; animation-delay: 6s; }
+
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+      50% { transform: translateY(-20px) rotate(10deg); opacity: 1; }
+      100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
     }
 
-    .support a {
-      color: #0f9d58;
-      text-decoration: none;
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
     }
-
-    .support a:hover {
-      text-decoration: underline;
+    @keyframes fadeInUp {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
     }
-
-    .welcome {
-      font-weight: bold;
-      margin-top: 10px;
-      color: #333;
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        margin: 30px 15px;
-        padding: 25px 20px;
-      }
-
-      button {
-        width: 100%;
-        margin: 10px 0;
-      }
+    @keyframes floatText {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0px); }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h2>Welcome to Kwabenamedia 🎉</h2>
-    <div class="subtitle">Your #1 Social Media Boosting Partner</div>
-    
-    <div class="welcome" id="userEmail">Authenticating...</div>
+  <header>
+    <h1>🌟 Kwabenamedia 🌟</h1>
+    <span class="floating-emoji emoji1">🚀</span>
+    <span class="floating-emoji emoji2">🔥</span>
+    <span class="floating-emoji emoji3">💎</span>
+    <span class="floating-emoji emoji4">📱</span>
+    <nav>
+      <a href="index.html">🏠 Home</a>
+      <a href="register.html">📝 Register</a>
+      <a href="login.html">🔑 Login</a>
+    </nav>
+  </header>
 
-    <button onclick="placeOrder()">📦 Place Order</button>
-    <button onclick="logout()">🚪 Logout</button>
+  <section class="hero">
+    <h2>🚀 Grow Your <span style="color:#ffdd00;">Social Media</span> Presence ✨</h2>
+    <p>Boost TikTok 🎵, Instagram 📸, YouTube ▶️, Telegram 💬 and more with <span style="color:#00eaff;">Kwabenamedia</span>.</p>
+    <a href="register.html" class="btn">📝 Register</a>
+    <a href="login.html" class="btn">🔑 Login</a>
+  </section>
 
-    <div class="tips" id="tipBox">
-      Loading tip...
+  <section class="features">
+    <div class="card">
+      <img src="https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg" alt="Instagram growth">
+      <div class="card-content">
+        <h3>📸 Grow <span style="color:#e1306c;">Instagram</span></h3>
+        <p>Increase your Instagram reach with authentic engagement services 🌟.</p>
+      </div>
     </div>
-
-    <div class="support">
-      <strong>Need help?</strong><br>
-      📧 <a href="mailto:kwabenaemma0554263293@gmail.com">kwabenaemma0554263293@gmail.com</a><br>
-      📱 <a href="https://wa.me/233554263293" target="_blank">WhatsApp: 0554263293</a>
+    <div class="card">
+      <img src="https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg" alt="YouTube creator">
+      <div class="card-content">
+        <h3>▶️ Boost <span style="color:#ff0000;">YouTube</span></h3>
+        <p>Get more subscribers, views, and likes ❤️ to grow faster 📈.</p>
+      </div>
     </div>
-  </div>
+    <div class="card">
+      <img src="https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg" alt="Telegram community">
+      <div class="card-content">
+        <h3>💬 Telegram Growth</h3>
+        <p>Expand your Telegram community with real members 👥 and reactions 🔥.</p>
+      </div>
+    </div>
+  </section>
 
-  <script>
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyCGoDeUIKI_aWPV-Ys6Swlw9YQNcVhn5dY",
-      authDomain: "kwabenamedia.firebaseapp.com",
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    // Redirect if not logged in
-    auth.onAuthStateChanged((user) => {
-      if (!user) {
-        window.location.href = "login.html";
-      } else {
-        document.getElementById("userEmail").innerText = `Logged in as: ${user.email}`;
-      }
-    });
-
-    function logout() {
-      auth.signOut().then(() => {
-        window.location.href = "login.html";
-      });
-    }
-
-    function placeOrder() {
-      window.location.href = "order.html";
-    }
-
-    // Rotating educational/funny tips
-    const tips = [
-      "💡 Tip: Always test before you post! Double-check links and content before placing orders.",
-      "😂 Funny: You can't spell algorithm without 'rithm' — so always code with rhythm!",
-      "📊 Stat: Over 85% of users trust a brand more when it has more followers. Time to boost!",
-      "🤖 Fun Fact: AI-generated content now powers more than 60% of online posts.",
-      "💬 Reminder: Your Kwabenamedia dashboard is live 24/7. Orders never sleep!",
-      "💡 Tip: Use trending hashtags to maximize your social boost results.",
-      "😂 Joke: Why did the marketer get kicked off the trampoline? Too many bounces!",
-      "📈 Insight: Videos have 1200% more shares than text and images combined. Boost your views!"
-    ];
-
-    function showRandomTip() {
-      const tip = tips[Math.floor(Math.random() * tips.length)];
-      document.getElementById("tipBox").textContent = tip;
-    }
-
-    // Rotate every 10 seconds
-    showRandomTip();
-    setInterval(showRandomTip, 10000);
-  </script>
+  <footer>
+    © 2025 Kwabenamedia. All Rights Reserved. 🌍✨
+  </footer>
 
 </body>
 </html>
