@@ -4,93 +4,48 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kwabenamedia Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #e8f5e9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .login-container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-    }
-    h2 {
-      text-align: center;
-      color: #2e7d32;
-    }
-    label {
-      margin-top: 10px;
-      display: block;
-      color: #333;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 20px;
-      background-color: #2e7d32;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #1b5e20;
-    }
-    .error {
-      color: red;
-      margin-top: 10px;
-      text-align: center;
-    }
-    .register-btn {
-      background-color: #388e3c;
-      margin-top: 10px;
-    }
-    .register-btn:hover {
-      background-color: #2c6b2f;
-    }
-    .forgot-btn {
-      background-color: #81c784;
-      margin-top: 10px;
-    }
-    .forgot-btn:hover {
-      background-color: #66bb6a;
-    }
+    body { margin:0; font-family:'Montserrat',sans-serif; background:linear-gradient(135deg,#43a047,#1b5e20); height:100vh; display:flex; justify-content:center; align-items:center; overflow:hidden; color:#333; }
+    .floating { position:absolute; font-size:24px; opacity:0.7; animation:float 6s infinite ease-in-out; }
+    @keyframes float { 0%{transform:translateY(0);}50%{transform:translateY(-20px);}100%{transform:translateY(0);} }
+    .login-container { background:#fff; padding:40px 30px; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.2); width:100%; max-width:380px; text-align:center; animation:fadeIn 1.2s ease-in-out; }
+    .login-container h2 { margin-bottom:20px; color:#2e7d32; font-weight:700; font-size:26px; }
+    label { display:block; text-align:left; margin-top:12px; font-weight:500; font-size:14px; }
+    input { width:100%; padding:12px; margin-top:6px; border:1px solid #ccc; border-radius:8px; font-size:15px; }
+    button { width:100%; padding:14px; margin-top:18px; border:none; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; transition:transform 0.2s,background 0.3s; }
+    button:hover{ transform:translateY(-2px); }
+    .login-btn{ background:#2e7d32; color:#fff; }
+    .login-btn:hover{ background:#1b5e20; }
+    .register-btn{ background:#43a047; color:#fff; }
+    .register-btn:hover{ background:#2c6b2f; }
+    .forgot-btn{ background:transparent; color:#2e7d32; font-size:14px; margin-top:10px; text-decoration:underline; }
+    .forgot-btn:hover{ color:#1b5e20; transform:none; }
+    .error{ margin-top:12px; color:red; font-size:14px; display:none; }
+    .shake{ animation:shake 0.4s; }
+    @keyframes shake{0%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);} }
+    @keyframes fadeIn{ from{opacity:0; transform:scale(0.9);} to{opacity:1; transform:scale(1);} }
+    @media(max-width:500px){ .login-container{ margin:0 15px; padding:30px 20px; } }
   </style>
 </head>
 <body>
+  <div class="floating" style="top:20%; left:10%;">📱</div>
+  <div class="floating" style="top:60%; left:5%;">⭐</div>
+  <div class="floating" style="top:30%; right:10%;">🔥</div>
+  <div class="floating" style="bottom:15%; right:15%;">🚀</div>
+
   <div class="login-container">
-    <h2>Login to Kwabenamedia</h2>
+    <h2>🔑 Login to Kwabenamedia</h2>
     <form id="loginForm">
       <label for="email">Email</label>
-      <input type="email" id="email" required />
-
+      <input type="email" id="email" placeholder="Enter your email" required />
       <label for="password">Password</label>
-      <input type="password" id="password" required />
-
-      <button type="submit">Login</button>
-      <!-- Forgot Password button -->
-      <button type="button" class="forgot-btn" onclick="window.open('https://wa.me/233554263293', '_blank')">Forgot Password?</button>
-      <button type="button" class="register-btn" onclick="window.location.href='register.html'">
-        Register
-      </button>
+      <input type="password" id="password" placeholder="Enter your password" required />
+      <button type="submit" class="login-btn">Login</button>
+      <button type="button" class="register-btn" onclick="window.location.href='register.html'">Register</button>
+      <button type="button" class="forgot-btn" onclick="window.open('https://wa.me/233554263293','_blank')">Forgot Password?</button>
       <div id="error" class="error"></div>
     </form>
   </div>
@@ -102,7 +57,6 @@
       projectId: "kwabenamedia",
       databaseURL: "https://kwabenamedia-default-rtdb.firebaseio.com",
     };
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
@@ -114,18 +68,27 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
 
-      auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Admin Login
-          if (email === "admin@gmail.com") {
-            window.location.href = "admin_dashboard.html";
-          } else {
-            // Regular User
-            window.location.href = "index.html";
-          }
+      // Admin login
+      if(email === "admin@gmail.com" && password === "Emmaemma11") {
+        localStorage.setItem("loggedIn","true");
+        localStorage.setItem("userType","admin");
+        window.location.href = "admin.html";
+        return;
+      }
+
+      // Regular user login with Firebase
+      auth.signInWithEmailAndPassword(email,password)
+        .then(()=> {
+          localStorage.setItem("loggedIn","true");
+          localStorage.setItem("userType","user");
+          localStorage.setItem("accountName", email);
+          window.location.href = "dashboard.html";
         })
-        .catch((error) => {
-          errorDiv.textContent = "Login failed: " + error.message;
+        .catch((error)=>{
+          errorDiv.style.display="block";
+          errorDiv.textContent="❌ "+error.message;
+          errorDiv.classList.add("shake");
+          setTimeout(()=>errorDiv.classList.remove("shake"),500);
         });
     });
   </script>
